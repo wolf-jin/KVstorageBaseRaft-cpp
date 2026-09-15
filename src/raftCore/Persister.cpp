@@ -2,6 +2,7 @@
 // Created by swx on 23-5-30.
 //
 #include "Persister.h"
+#include <sstream>
 #include "util.h"
 
 // todo:会涉及反复打开文件的操作，没有考虑如果文件出现问题会怎么办？？
@@ -16,20 +17,17 @@ void Persister::Save(const std::string raftstate, const std::string snapshot) {
 std::string Persister::ReadSnapshot() {
   std::lock_guard<std::mutex> lg(m_mtx);
   if (m_snapshotOutStream.is_open()) {
-    m_snapshotOutStream.close();
+    m_snapshotOutStream.flush();
   }
 
-  DEFER {
-    m_snapshotOutStream.open(m_snapshotFileName);  //默认是追加
-  };
-  std::fstream ifs(m_snapshotFileName, std::ios_base::in);
-  if (!ifs.good()) {
+  std::ifstream ifs(m_snapshotFileName, std::ios::in | std::ios::binary);
+  if (!ifs.is_open()) {
     return "";
   }
-  std::string snapshot;
-  ifs >> snapshot;
-  ifs.close();
-  return snapshot;
+
+  std::stringstream buffer;
+  buffer << ifs.rdbuf();
+  return buffer.str();
 }
 
 void Persister::SaveRaftState(const std::string &data) {
@@ -49,14 +47,18 @@ long long Persister::RaftStateSize() {
 std::string Persister::ReadRaftState() {
   std::lock_guard<std::mutex> lg(m_mtx);
 
-  std::fstream ifs(m_raftStateFileName, std::ios_base::in);
-  if (!ifs.good()) {
+  if (m_raftStateOutStream.is_open()) {
+    m_raftStateOutStream.flush();
+  }
+
+  std::ifstream ifs(m_raftStateFileName, std::ios::in | std::ios::binary);
+  if (!ifs.is_open()) {
     return "";
   }
-  std::string snapshot;
-  ifs >> snapshot;
-  ifs.close();
-  return snapshot;
+
+  std::stringstream buffer;
+  buffer << ifs.rdbuf();
+  return buffer.str();
 }
 
 Persister::Persister(const int me)

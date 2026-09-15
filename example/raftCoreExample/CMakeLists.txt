@@ -9,3 +9,6 @@ target_link_libraries(raftCoreRun skip_list_on_raft rpc_lib protobuf muduo_net m
 set(SRC_LIST2 caller.cpp)
 add_executable(callerMain ${src_raftClerk} ${SRC_LIST2}  ${src_common})
 target_link_libraries(callerMain skip_list_on_raft  protobuf boost_serialization )
+
+add_executable(benchmarkMain ${src_raftClerk} benchmark.cpp ${src_common})
+target_link_libraries(benchmarkMain skip_list_on_raft protobuf boost_serialization)

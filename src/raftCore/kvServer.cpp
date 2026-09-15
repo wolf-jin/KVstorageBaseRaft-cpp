@@ -301,6 +301,7 @@ void KvServer::ReadRaftApplyCommandLoop() {
 //  因此snapshot的具体格式是由kvserver层来定的，raft只负责传递这个东西
 //  snapShot里面包含kvserver需要维护的persist_lastRequestId 以及kvDB真正保存的数据persist_kvdb
 void KvServer::ReadSnapShotToInstall(std::string snapshot) {
+  DPrintf("[Snapshot] server=%d snapshot size=%zu", m_me, snapshot.size());
   if (snapshot.empty()) {
     // bootstrap without any state?
     return;

@@ -193,7 +193,10 @@ int SkipList<K, V>::insert_element(const K key, const V value) {
 
   // if current node have key equal to searched key, we get it
   if (current != NULL && current->get_key() == key) {
-    std::cout << "key: " << key << ", exists" << std::endl;
+    if (Debug) {
+      std::cout << "key: " << key << ", exists" << std::endl;
+    }
+    // std::cout << "key: " << key << ", exists" << std::endl;
     _mtx.unlock();
     return 1;
   }
@@ -299,7 +302,7 @@ void SkipList<K, V>::load_file(const std::string &dumpStr) {
   boost::archive::text_iarchive ia(iss);
   ia >> dumper;
   for (int i = 0; i < dumper.keyDumpVt_.size(); ++i) {
-    insert_element(dumper.keyDumpVt_[i], dumper.keyDumpVt_[i]);
+    insert_element(dumper.keyDumpVt_[i], dumper.valDumpVt_[i]);
   }
 }
 
@@ -430,8 +433,10 @@ bool SkipList<K, V>::search_element(K key, V &value) {
     // std::cout << "Found key: " << key << ", value: " << current->get_value() << std::endl;
     return true;
   }
-
-  std::cout << "Not Found Key:" << key << std::endl;
+  if (Debug) {
+      std::cout << "Not Found Key:" << key << std::endl;
+  }
+  // std::cout << "Not Found Key:" << key << std::endl;
   return false;
 }
 

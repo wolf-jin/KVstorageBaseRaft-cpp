@@ -16,6 +16,8 @@ snapshot/
 *.dat
 client.data
 client.data.old
+raftstatePersist*.txt
+snapshotPersist*.txt
 
 # CMake生成文件
 CMakeCache.txt

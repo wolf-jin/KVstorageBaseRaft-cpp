@@ -220,7 +220,10 @@ int SkipList<K, V>::insert_element(const K key, const V value) {
       inserted_node->forward[i] = update[i]->forward[i];
       update[i]->forward[i] = inserted_node;
     }
-    std::cout << "Successfully inserted key:" << key << ", value:" << value << std::endl;
+    if (Debug) {
+        std::cout << "Successfully inserted key:" << key << ", value:" << value << std::endl;
+    }
+    // std::cout << "Successfully inserted key:" << key << ", value:" << value << std::endl;
     _element_count++;
   }
   _mtx.unlock();
@@ -356,8 +359,10 @@ void SkipList<K, V>::delete_element(K key) {
     while (_skip_list_level > 0 && _header->forward[_skip_list_level] == 0) {
       _skip_list_level--;
     }
-
-    std::cout << "Successfully deleted key " << key << std::endl;
+    if (Debug) {
+        std::cout << "Successfully deleted key " << key << std::endl;
+    }
+    // std::cout << "Successfully deleted key " << key << std::endl;
     delete current;
     _element_count--;
   }
@@ -400,7 +405,10 @@ level 0         1    4   9 10         30   40    50+-->60      70       100
 */
 template <typename K, typename V>
 bool SkipList<K, V>::search_element(K key, V &value) {
-  std::cout << "search_element-----------------" << std::endl;
+  if (Debug) {
+      std::cout << "search_element-----------------" << std::endl;
+  }
+  // std::cout << "search_element-----------------" << std::endl;
   Node<K, V> *current = _header;
 
   // start from highest level of skip list
@@ -416,7 +424,10 @@ bool SkipList<K, V>::search_element(K key, V &value) {
   // if current node have key equal to searched key, we get it
   if (current and current->get_key() == key) {
     value = current->get_value();
-    std::cout << "Found key: " << key << ", value: " << current->get_value() << std::endl;
+    if (Debug) {
+      std::cout << "Found key: " << key << ", value: " << current->get_value() << std::endl;
+    }
+    // std::cout << "Found key: " << key << ", value: " << current->get_value() << std::endl;
     return true;
   }
 

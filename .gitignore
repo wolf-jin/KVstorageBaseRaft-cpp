@@ -1,9 +1,28 @@
-
+# 忽略bin目录下所有内容
+bin/*
+# 但是单独保留 test.conf，上传这个文件
 !bin/test.conf
-.idea
-bin
-cmake-build-debug
-lib
 
-*.out
+# 编译构建目录
+build/
+*.o
 *.a
+*.so
+
+# raft日志与快照持久化目录
+log/
+snapshot/
+*.log
+*.dat
+client.data
+client.data.old
+
+# CMake生成文件
+CMakeCache.txt
+CMakeFiles/
+install_manifest.txt
+*.cmake
+
+# vim临时文件
+*.swp
+*.swo

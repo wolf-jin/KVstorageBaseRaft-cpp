@@ -76,6 +76,7 @@ template <typename K, typename V>
 V Node<K, V>::get_value() const {
   return value;
 };
+
 template <typename K, typename V>
 void Node<K, V>::set_value(V value) {
   this->value = value;
@@ -253,24 +254,17 @@ void SkipList<K, V>::display_list() {
 // Dump data in memory to file
 template <typename K, typename V>
 std::string SkipList<K, V>::dump_file() {
-  // std::cout << "dump_file-----------------" << std::endl;
-  //
-  //
-  // _file_writer.open(STORE_FILE);
   Node<K, V> *node = this->_header->forward[0];
   SkipListDump<K, V> dumper;
   while (node != nullptr) {
     dumper.insert(*node);
-    // _file_writer << node->get_key() << ":" << node->get_value() << "\n";
-    // std::cout << node->get_key() << ":" << node->get_value() << ";\n";
     node = node->forward[0];
   }
   std::stringstream ss;
   boost::archive::text_oarchive oa(ss);
   oa << dumper;
   return ss.str();
-  // _file_writer.flush();
-  // _file_writer.close();
+  
 }
 
 // Load data from disk
@@ -425,18 +419,18 @@ bool SkipList<K, V>::search_element(K key, V &value) {
   current = current->forward[0];
 
   // if current node have key equal to searched key, we get it
-  if (current and current->get_key() == key) {
+  if (current && current->get_key() == key) {
     value = current->get_value();
     if (Debug) {
       std::cout << "Found key: " << key << ", value: " << current->get_value() << std::endl;
     }
     // std::cout << "Found key: " << key << ", value: " << current->get_value() << std::endl;
     return true;
-  }
-  if (Debug) {
+  } else {
+      if (Debug) {
       std::cout << "Not Found Key:" << key << std::endl;
-  }
-  // std::cout << "Not Found Key:" << key << std::endl;
+      }
+    }
   return false;
 }
 
@@ -474,6 +468,7 @@ SkipList<K, V>::~SkipList() {
   }
   delete (_header);
 }
+
 template <typename K, typename V>
 void SkipList<K, V>::clear(Node<K, V> *cur) {
   if (cur->forward[0] != nullptr) {
